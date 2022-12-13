@@ -1,0 +1,19 @@
+{
+  "name": "assets",
+  "version": "1.0.0",
+  "description": "Project assets",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "tailwindcss --minify -c tailwind.config.js -o ../dist/css/tailwind.min.css && esbuild --minify --external:*.png --bundle css/bundle.css --outfile=../dist/css/bundle.min.css",
+    "build:css:w": "tailwindcss -w -c tailwind.config.js -o ../dist/css/tailwind.min.css",
+    "build:js": "mkdir -p ../dist/js && cat js/*.js | esbuild --minify > ../dist/js/bundle.min.js",
+    "build:img": "rm -rf ../dist/img && cp -r ./img ../dist/img",
+    "build": "npm run build:css && npm run build:js && npm run build:img"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "esbuild": "^0.15.10",
+    "tailwindcss": "^3.1.8"
+  }
+}

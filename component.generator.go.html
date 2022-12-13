@@ -1,0 +1,35 @@
+{{ define "CGenerator" }}
+<form action="/" method="GET" class="flex justify-between">
+    <!-- Parameters column -->
+    <div class="w-1/2 flex flex-col gap-2">
+        <label for="title">Title</label>
+        <input type="text" name="title" value="{{ .Query.Title }}" placeholder="Title ..." class="{{ template `css.input` }}">
+        <label for="author">Author</label>
+        <input type="text" name="author" value="{{ .Query.Author }}" placeholder="Author ..." class="{{ template `css.input` }}">
+        <label for="website">Website</label>
+        <input type="text" name="website" value="{{ .Query.Website }}" placeholder="Website ..." class="{{ template `css.input` }}">
+        <label for="logo">Logo (url)</label>
+        <input type="text" name="logo" value="{{ .Query.Logo }}" placeholder="Logo image ..." class="{{ template `css.input` }}">
+        <label for="background">Background (url)</label>
+        <input type="text" name="background" value="{{ .Query.Background }}" placeholder="Background image ..." class="{{ template `css.input` }}">
+        <div class="flex items-center gap-2">
+            <input type="checkbox" name="overlay" value="true" {{ if .Query.Overlay }} checked {{ end }} class="{{ template `css.checkbox` }}">
+            <label for="frame">Overlay</label>
+        </div>
+        <div class="flex items-center gap-2">
+            <div class="bg-gray-800 px-2 pt-2">
+                <input type="range" name="dim" value="{{ .Query.Dim }}" min="0" max="255">
+            </div>
+            <label for="frame">Background dim</label>
+        </div>
+        <button class="{{ template `css.button` }}">Apply</button>
+    </div>
+    <!-- Preview -->
+    <div class="w-1/2 pl-4 pt-7 flex flex-col gap-2">
+        <img src="{{ .Image }}" alt="og">
+        <div>
+            <button class="{{ template `css.button` }} w-full">Copy og:url</button>
+        </div>
+    </div>
+</form>
+{{ end }}
