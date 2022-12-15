@@ -38,6 +38,8 @@ func setupPages(mux *mux.Router) {
 	// We are using custom pages register function here.
 	// Check Page description for details.
 	Page(mux, "/", PIndex)
+	Page(mux, "/generator", PGenerator)
+	Page(mux, "/api", PAPI)
 }
 
 // setupActions registers actions for dynamic components.
@@ -47,6 +49,7 @@ func setupActions(mux *mux.Router) {
 	// Action(mux, CExample(nil))
 }
 
+// setupAPI registers API handlers.
 func setupAPI(mux *mux.Router) {
 	mux.HandleFunc("/api/ogen", AGenerate)
 }

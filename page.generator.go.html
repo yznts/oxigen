@@ -1,4 +1,4 @@
-{{- /*gotype: start.local.PIndexState*/ -}}
+{{- /*gotype: start.local.PGeneratorState*/ -}}
 <!doctype html>
 <html lang="en">
 <head>
@@ -12,12 +12,7 @@
 <body class="{{ template `css.body` }}">
     {{ template "CNavbar" }}
     <div class="mt-14 max-w-screen-lg mx-auto">
-        <p>Social media image generator</p>
-        <ul class="mt-2 list-disc list-inside">
-            <li><a href="/generator" class="{{ template `css.a` }}">Generator</a></li>
-            <li><a href="#" class="{{ template `css.a` }}">API</a></li>
-            <li><a href="#" class="{{ template `css.a` }}">sr.ht</a></li>
-        </ul>
+        {{ template "CGenerator" await .Generator }}
     </div>
     {{ client }}
     <script src="/static/js/bundle.min.js"></script>
