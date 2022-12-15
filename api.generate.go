@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/rand"
+	"fmt"
 	"image/color"
 	"io/ioutil"
 	"net/http"
@@ -67,6 +69,7 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 		// Download background from provided url
 		bgresp := zen.Request("GET", query.Background).Do()
 		bgbytes := zen.Must(ioutil.ReadAll(bgresp.Body))
+		bgresp.Body.Close()
 		// Open temp file
 		bgfile := zen.Must(ioutil.TempFile("/tmp", "*.oxigen.bg"))
 		defer os.Remove(bgfile.Name())
@@ -133,30 +136,48 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 	}
 	// Website
 	if query.Website != "" {
+		// Load website font
 		if err := img.LoadFontFace(fontWebsite, fontSizeWebsite); err != nil {
 			panic("error while reading font file")
 		}
-		img.SetColor(colorWebsite)
+		// Define website position
 		_, textHeight := img.MeasureString(query.Website)
 		x := marginWebsiteX
 		y := float64(img.Height()) - textHeight - marginWebsiteY
+		// Define website color
+		img.SetColor(colorWebsite)
+		// Raw website
 		img.DrawString(query.Website, x, y)
 	}
 	// Logo
 	if query.Logo != "" {
 		// Download logo from provided url
-		resp := zen.Request("GET", query.Logo).Do()
-		zen.Must(0, os.WriteFile("/tmp/oxigen/logo", zen.Must(ioutil.ReadAll(resp.Body)), 0644))
+		lgresp := zen.Request("GET", query.Logo).Do()
+		lgbytes := zen.Must(ioutil.ReadAll(lgresp.Body))
+		lgresp.Body.Close()
+		// Open temp file
+		lgfile := zen.Must(ioutil.TempFile("/tmp", "*.oxigen.lg"))
+		defer lgfile.Close()
+		// Save loaded image to temp file
+		zen.Must(lgfile.Write(lgbytes))
+		// Close file
+		zen.Must(0, lgfile.Close())
 		// Load into object
-		bg := zen.Must(gg.LoadImage("/tmp/oxigen/logo"))
+		bg := zen.Must(gg.LoadImage(lgfile.Name()))
+		// Resize
 		bg = imaging.Resize(bg, 250, 0, imaging.Lanczos)
-		// Write to image context
+		// Define position
 		x := float64(img.Width()) - float64(bg.Bounds().Dx()) - marginLogoX
 		y := float64(img.Height()) - float64(bg.Bounds().Dy()) - marginLogoY
+		// Write to image context
 		img.DrawImage(bg, int(x), int(y))
 	}
-	// Save img
-	zen.Must(0, img.SavePNG("/tmp/oxigen/og"))
+	// Generate unique og file name
+	uid := make([]byte, 16)
+	zen.Must(rand.Read(uid))
+	ogname := fmt.Sprintf("/tmp/%s.oxigen.og", uid)
+	// Save resulting image to generated og name
+	zen.Must(0, img.SavePNG(ogname))
 	// Write response
-	http.ServeFile(w, r, "/tmp/oxigen/og")
+	http.ServeFile(w, r, ogname)
 }

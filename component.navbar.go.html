@@ -3,13 +3,13 @@
     <!-- Left -->
     <div>
         <!-- Logo (kind of) -->
-        <span class="font-bold uppercase">oxigen</span> |
+        <a href="/" class="font-bold uppercase">oxigen</a> |
         <span class="text-xs">og:image generator</span>
     </div>
     <!-- Right -->
     <div class="flex items-center gap-x-4">
-        <a href="/generator">Generator</a>
-        <a href="/api">API</a>
+        <a href="{{ template `href.generator.default` }}" class="{{ template `css.a.clean` }}">Generator</a>
+        <a href="/api" class="{{ template `css.a.clean` }}">API</a>
         <a href="#" class="{{ template `css.a.clean` }}">sr.ht</a>
     </div>
 </nav>

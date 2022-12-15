@@ -11,13 +11,11 @@
 </head>
 <body class="{{ template `css.body` }}">
     {{ template "CNavbar" }}
-    <div class="mt-14 max-w-screen-lg mx-auto">
+    <div class="mt-14 max-w-screen-lg mx-auto flex flex-col items-center justify-center">
         <p>Social media image generator</p>
-        <ul class="mt-2 list-disc list-inside">
-            <li><a href="/generator" class="{{ template `css.a` }}">Generator</a></li>
-            <li><a href="#" class="{{ template `css.a` }}">API</a></li>
-            <li><a href="#" class="{{ template `css.a` }}">sr.ht</a></li>
-        </ul>
+        <a href="{{ template `href.generator.default` }}" class="mt-2 {{ template `css.button` }}">
+            Generate
+        </a>
     </div>
     {{ client }}
     <script src="/static/js/bundle.min.js"></script>
