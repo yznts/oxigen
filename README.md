@@ -16,4 +16,6 @@
   Oxigen is a dynamic social media image generator, which gives you an ability to easily create, customize and use og images with both UI and API.
 </p>
 
-<img alt="demo" src="assets/img/demo.png" width="700">
+<p align="center">
+  <img alt="demo" src="assets/img/demo.png" width="700">
+</p>
