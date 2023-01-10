@@ -8,7 +8,8 @@
     "build:css:w": "tailwindcss -w -c tailwind.config.js -o ../dist/css/tailwind.min.css",
     "build:js": "mkdir -p ../dist/js && cat js/*.js | esbuild --minify > ../dist/js/bundle.min.js",
     "build:img": "rm -rf ../dist/img && cp -r ./img ../dist/img",
-    "build": "npm run build:css && npm run build:js && npm run build:img"
+    "build:fonts": "rm -rf ../dist/fonts && cp -r ./fonts ../dist/fonts",
+    "build": "npm run build:css && npm run build:js && npm run build:img && npm run build:fonts"
   },
   "author": "",
   "license": "ISC",

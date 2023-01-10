@@ -13,9 +13,9 @@ import (
 
 // Generation constants
 var (
-	fontTitle   = "assets/fonts/OpenSans/OpenSans-SemiBold.ttf"
-	fontAuthor  = "assets/fonts/OpenSans/OpenSans-SemiBold.ttf"
-	fontWebsite = "assets/fonts/OpenSans/OpenSans-Light.ttf"
+	fontTitle   = "dist/fonts/OpenSans/OpenSans-SemiBold.ttf"
+	fontAuthor  = "dist/fonts/OpenSans/OpenSans-SemiBold.ttf"
+	fontWebsite = "dist/fonts/OpenSans/OpenSans-Light.ttf"
 
 	fontSizeTitle   = 80.0
 	fontSizeAuthor  = 50.0
