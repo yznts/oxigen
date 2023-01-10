@@ -1,8 +1,6 @@
 package main
 
 import (
-	"crypto/rand"
-	"fmt"
 	"image/color"
 	"io/ioutil"
 	"net/http"
@@ -156,7 +154,7 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 		lgbytes := zen.Must(ioutil.ReadAll(lgresp.Body))
 		lgresp.Body.Close()
 		// Open temp file
-		lgfile := zen.Must(ioutil.TempFile("/tmp", "*.oxigen.lg"))
+		lgfile, _ := ioutil.TempFile("/tmp", "*.oxigen.lg")
 		defer lgfile.Close()
 		// Save loaded image to temp file
 		zen.Must(lgfile.Write(lgbytes))
@@ -173,11 +171,9 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 		img.DrawImage(bg, int(x), int(y))
 	}
 	// Generate unique og file name
-	uid := make([]byte, 16)
-	zen.Must(rand.Read(uid))
-	ogname := fmt.Sprintf("/tmp/%s.oxigen.og", uid)
+	ogfile := zen.Must(ioutil.TempFile("/tmp", "*.oxigen.og")).Name()
 	// Save resulting image to generated og name
-	zen.Must(0, img.SavePNG(ogname))
+	zen.Must(0, img.SavePNG(ogfile))
 	// Write response
-	http.ServeFile(w, r, ogname)
+	http.ServeFile(w, r, ogfile)
 }

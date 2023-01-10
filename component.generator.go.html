@@ -3,32 +3,34 @@
     <!-- Parameters column -->
     <div class="w-1/2 flex flex-col gap-2">
         <label for="title">Title</label>
-        <input type="text" name="title" value="{{ .Query.Title }}" placeholder="Title ..." class="{{ template `css.input` }}">
+        <input type="text" name="title" value="{{ .Query.Title }}" placeholder="Title ..." class="input input-block">
         <label for="author">Author</label>
-        <input type="text" name="author" value="{{ .Query.Author }}" placeholder="Author ..." class="{{ template `css.input` }}">
+        <input type="text" name="author" value="{{ .Query.Author }}" placeholder="Author ..." class="input input-block">
         <label for="website">Website</label>
-        <input type="text" name="website" value="{{ .Query.Website }}" placeholder="Website ..." class="{{ template `css.input` }}">
+        <input type="text" name="website" value="{{ .Query.Website }}" placeholder="Website ..." class="input input-block">
         <label for="logo">Logo (url)</label>
-        <input type="text" name="logo" value="{{ .Query.Logo }}" placeholder="Logo image ..." class="{{ template `css.input` }}">
+        <input type="text" name="logo" value="{{ .Query.Logo }}" placeholder="Logo image ..." class="input input-block">
         <label for="background">Background (url)</label>
-        <input type="text" name="background" value="{{ .Query.Background }}" placeholder="Background image ..." class="{{ template `css.input` }}">
+        <input type="text" name="background" value="{{ .Query.Background }}" placeholder="Background image ..." class="input input-block">
         <div class="flex items-center gap-2">
-            <input type="checkbox" name="overlay" value="true" {{ if .Query.Overlay }} checked {{ end }} class="{{ template `css.checkbox` }}">
+            <input type="checkbox" name="overlay" value="true" {{ if .Query.Overlay }} checked {{ end }} class="checkbox">
             <label for="frame">Overlay</label>
         </div>
         <div class="flex items-center gap-2">
-            <div class="bg-gray-800 px-2 pt-2">
+            <div class="px-2 pt-2">
                 <input type="range" name="dim" value="{{ .Query.Dim }}" min="0" max="255">
             </div>
             <label for="frame">Background dim</label>
         </div>
-        <button class="{{ template `css.button` }}">Apply</button>
+        <div>
+            <button class="btn btn-outline-primary">Apply</button>
+        </div>
     </div>
     <!-- Preview -->
-    <div class="w-1/2 pl-4 pt-7 flex flex-col gap-2">
-        <img src="{{ .Image }}" alt="og">
+    <div class="w-1/2 pl-4 pt-8 flex flex-col gap-2">
+        <img src="{{ .Image }}" alt="og" class="rounded-xl">
         <div>
-            <button class="{{ template `css.button` }} w-full">Copy og:url</button>
+            <button class="btn btn-primary" type="button" onclick="navigator.clipboard.writeText(`${window.location.host}{{ .Image | js }}`)">Copy og:url</button>
         </div>
     </div>
 </form>

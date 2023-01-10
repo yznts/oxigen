@@ -19,10 +19,10 @@ func setupMiddlewares(mux *mux.Router) {
 	})
 }
 
-// setupStatic registers a static files handler.
-func setupStatic(mux *mux.Router) {
-	mux.PathPrefix("/static/").Handler(
-		http.StripPrefix("/static/", http.FileServer(http.Dir("./dist"))),
+// setupAssets registers a static files handler.
+func setupAssets(mux *mux.Router) {
+	mux.PathPrefix("/assets/").Handler(
+		http.StripPrefix("/assets/", http.FileServer(http.Dir("./dist"))),
 	)
 }
 
@@ -38,7 +38,7 @@ func setupPages(mux *mux.Router) {
 	// We are using custom pages register function here.
 	// Check Page description for details.
 	Page(mux, "/", PIndex)
-	Page(mux, "/generator", PGenerator)
+	Page(mux, "/ui", PUI)
 	Page(mux, "/api", PAPI)
 }
 
@@ -65,7 +65,7 @@ func main() {
 
 	// Setup parts into mux
 	setupMiddlewares(mux)
-	setupStatic(mux)
+	setupAssets(mux)
 	setupKyoto(mux)
 	setupPages(mux)
 	setupActions(mux)

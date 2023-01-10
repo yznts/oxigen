@@ -1,19 +1,17 @@
 /** @type {import('tailwindcss').Config} */
-const colors = require('tailwindcss/colors')
+const colors = require('tailwindcss/colors');
 
 module.exports = {
   content: [
     "../*.{go,html}",
     "../assets/*.{js,ts}"
   ],
-  plugins: [],
-  mode: 'jit',
-  darkMode: 'media',
   theme: {
-    extend: {
-      colors: {
-        gray: colors.neutral
-      }
-    }
-  }
+    extend: {},
+  },
+  plugins: [
+    require('rippleui')
+  ],
+  mode: 'jit',
+  darkMode: 'media'
 }

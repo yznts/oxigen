@@ -3,14 +3,14 @@ package main
 import "git.sr.ht/~kyoto-framework/kyoto"
 
 // PIndexState is a state of PIndex.
-type PGeneratorState struct {
+type PUIState struct {
 	Generator *kyoto.ComponentF[CGeneratorState]
 }
 
-// PIndex is a generator UI page.
-func PGenerator(ctx *kyoto.Context) (state PGeneratorState) {
+// PUI is a generator UI page.
+func PUI(ctx *kyoto.Context) (state PUIState) {
 	// Setup rendering
-	kyoto.Template(ctx, "page.generator.go.html")
+	kyoto.Template(ctx, "page.ui.go.html")
 	// Init components
 	state.Generator = kyoto.Use(ctx, CGenerator(&CGeneratorArgs{}))
 	// Return
