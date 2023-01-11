@@ -69,7 +69,7 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 		bgbytes := zen.Must(ioutil.ReadAll(bgresp.Body))
 		bgresp.Body.Close()
 		// Open temp file
-		bgfile := zen.Must(ioutil.TempFile("/tmp", "*.oxigen.bg"))
+		bgfile := zen.Must(os.CreateTemp("/tmp", "*.oxigen.bg"))
 		defer os.Remove(bgfile.Name())
 		// Save loaded image to temp file
 		zen.Must(bgfile.Write(bgbytes))
@@ -154,8 +154,9 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 		lgbytes := zen.Must(ioutil.ReadAll(lgresp.Body))
 		lgresp.Body.Close()
 		// Open temp file
-		lgfile, _ := ioutil.TempFile("/tmp", "*.oxigen.lg")
-		defer lgfile.Close()
+		lgfile, _ := os.CreateTemp("/tmp", "*.oxigen.lg")
+		// Defer clean up
+		defer os.Remove(lgfile.Name())
 		// Save loaded image to temp file
 		zen.Must(lgfile.Write(lgbytes))
 		// Close file
@@ -170,10 +171,14 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 		// Write to image context
 		img.DrawImage(bg, int(x), int(y))
 	}
-	// Generate unique og file name
-	ogfile := zen.Must(ioutil.TempFile("/tmp", "*.oxigen.og")).Name()
-	// Save resulting image to generated og name
-	zen.Must(0, img.SavePNG(ogfile))
+	// Generate unique og file
+	ogfile := zen.Must(os.CreateTemp("/tmp", "*.oxigen.og"))
+	// Defer clean up
+	defer os.Remove(ogfile.Name())
+	// Save resulting image to generated file
+	zen.Must(0, img.SavePNG(ogfile.Name()))
+	// Close file
+	zen.Must(0, ogfile.Close())
 	// Write response
-	http.ServeFile(w, r, ogfile)
+	http.ServeFile(w, r, ogfile.Name())
 }
