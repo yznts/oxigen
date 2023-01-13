@@ -22,8 +22,6 @@ FROM alpine
 # Copy app
 WORKDIR /app
 COPY --from=build /src/oxigen /app/
-COPY --from=build /src/*.go.html /app/
-COPY --from=build /src/dist /app/dist
 
 # Entrypoint
 ENTRYPOINT ./oxigen

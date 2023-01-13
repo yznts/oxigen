@@ -1,8 +1,10 @@
 package main
 
 import (
+	"embed"
 	"flag"
 	"fmt"
+	"io/fs"
 	"net/http"
 	"os"
 
@@ -11,6 +13,14 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
+
+// Embed filesystem
+
+//go:embed *.go.html
+var fstemplates embed.FS
+
+//go:embed dist
+var fsdist embed.FS
 
 // setupMiddlewares installs common project middlewares into provided mux.
 func setupMiddlewares(mux *mux.Router) {
@@ -21,16 +31,21 @@ func setupMiddlewares(mux *mux.Router) {
 
 // setupAssets registers a static files handler.
 func setupAssets(mux *mux.Router) {
+	distroot, _ := fs.Sub(fsdist, "dist")
 	mux.PathPrefix("/assets/").Handler(
-		http.StripPrefix("/assets/", http.FileServer(http.Dir("./dist"))),
+		http.StripPrefix("/assets/", http.FileServer(http.FS(distroot))),
 	)
 }
 
 // setupKyoto provides advanced configuration for kyoto.
 func setupKyoto(mux *mux.Router) {
-	kyoto.TemplateConf.FuncMap = kyoto.ComposeFuncMap(
-		kyoto.FuncMap, zen.FuncMap,
-	)
+	kyoto.TemplateConf = kyoto.TemplateConfiguration{
+		ParseFS:   &fstemplates,
+		ParseGlob: "*.go.html",
+		FuncMap: kyoto.ComposeFuncMap(
+			kyoto.FuncMap, zen.FuncMap,
+		),
+	}
 }
 
 // setupPages registers project pages.
