@@ -3,12 +3,12 @@
 # -------------
 FROM golang:alpine AS build
 
+# System deps
+RUN apk add build-base git npm
+
 # Attach sources
 WORKDIR /src
 ADD . /src
-
-# System deps
-RUN apk add build-base git npm
 
 # Build
 RUN (cd assets; npm i; npm run build)
@@ -23,7 +23,5 @@ FROM alpine
 WORKDIR /app
 COPY --from=build /src/oxigen /app/
 
-# Entrypoint
-ENTRYPOINT ./oxigen
 # Command
-CMD -http 0.0.0.0:80
+CMD ["./oxigen", "-http", "0.0.0.0:80"]
