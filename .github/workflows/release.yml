@@ -27,6 +27,17 @@ jobs:
       - name: Check out
         uses: actions/checkout@v3
 
+      - name: Install node and npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Build assets
+        run: |
+          cd assets &&
+          npm i && 
+          npm run build
+
       - name: Build and publish binaries
         uses: wangyoucao577/go-release-action@v1.34
         with:

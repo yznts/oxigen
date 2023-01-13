@@ -11,8 +11,8 @@ ADD . /src
 RUN apk add build-base git npm
 
 # Build
-RUN go build -o oxigen
 RUN (cd assets; npm i; npm run build)
+RUN go build -o oxigen
 
 # -------------
 # runtime stage
