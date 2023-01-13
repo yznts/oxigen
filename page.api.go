@@ -68,18 +68,18 @@ func PAPI(ctx *kyoto.Context) (state PAPIState) {
 				{
 					Name: "background",
 					Type: "string",
-					Help: "url to image background (black backgroud by default)",
+					Help: "url to image background (black background by default)",
 				},
 				{
 					Name:    "overlay",
 					Type:    "bool",
-					Help:    "use dark frame on top of the backgroud",
+					Help:    "use dark frame on top of the background",
 					Default: "false",
 				},
 				{
 					Name:    "dim",
 					Type:    "int",
-					Help:    "dim backgroud (0-255)",
+					Help:    "dim background (0-255)",
 					Default: "0",
 				},
 			},
