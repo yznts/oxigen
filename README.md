@@ -37,7 +37,7 @@ docker run ghcr.io/yuriizinets/oxigen:latest -p 80:80
 
 ### Binary way
 
-> Temporary not working (see a discussion here https://github.com/yuriizinets/oxigen/issues/5)
+> Temporary not working (see a discussion here https://github.com/yuriizinets/oxigen/issues/5)  
 > Use a docker image instead
 
 First, you need to download and unpack latest [release](https://github.com/yuriizinets/oxigen/releases/tag/1.3) 
@@ -52,7 +52,7 @@ Optionaly, you can move binary to your bin folder (f.e. `mv oxigen /usr/local/bi
 
 ### Go way
 
-> Temporary not working (see a discussion here https://github.com/yuriizinets/oxigen/issues/5)
+> Temporary not working (see a discussion here https://github.com/yuriizinets/oxigen/issues/5)  
 > Use a docker image instead
 
 In case you have go binaries folder in your PATH, you can get, build and install oxigen by your own.
