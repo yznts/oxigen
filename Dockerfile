@@ -26,4 +26,6 @@ COPY --from=build /src/*.go.html /app/
 COPY --from=build /src/dist /app/dist
 
 # Entrypoint
-ENTRYPOINT ./oxigen -http 0.0.0.0:80
+ENTRYPOINT ./oxigen
+# Command
+CMD -http 0.0.0.0:80
