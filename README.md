@@ -19,3 +19,44 @@
 <p align="center">
   <img alt="demo" src="assets/img/demo.png" width="700">
 </p>
+
+## Installation
+
+You have at least 3 options to install and run oxigen.
+
+### Binary way
+
+First, you need to download and unpack latest [release](https://github.com/yuriizinets/oxigen/releases/tag/1.3) 
+with corresponding OS and architecture.
+After this, it's enough just to run oxigen.
+
+```bash
+./oxigen
+```
+
+Optionaly, you can move binary to your bin folder (f.e. `mv oxigen /usr/local/bin/`)
+
+### Docker way
+
+Please note, you need Docker installed on your system.
+To use dockerized oxigen, it's enough to create and run a container with an existing image.
+
+```bash
+docker run ghcr.io/yuriizinets/oxigen:latest -p 80:80
+```
+
+> !!! It's highly recommended to use explicit version instead of `latest`
+
+### Go way
+
+In case you have go binaries folder in your PATH, you can get, build and install oxigen by your own.
+
+```bash
+go install github.com/yuriizinets/oxigen@latest
+```
+
+After that, oxigen will be available globally.
+
+```bash
+oxigen
+```
