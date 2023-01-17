@@ -1,8 +1,8 @@
 package main
 
 import (
-	"git.sr.ht/~kyoto-framework/kyoto"
 	"github.com/gorilla/mux"
+	"github.com/kyoto-framework/kyoto/v2"
 )
 
 // This file includes common functions to work with handlers

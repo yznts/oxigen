@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"git.sr.ht/~kyoto-framework/kyoto"
-	"git.sr.ht/~kyoto-framework/zen"
+	"github.com/kyoto-framework/kyoto/v2"
+	"github.com/kyoto-framework/zen/v2"
 )
 
 type CGeneratorArgs struct{}

@@ -1,6 +1,6 @@
 package main
 
-import "git.sr.ht/~kyoto-framework/kyoto"
+import "github.com/kyoto-framework/kyoto/v2"
 
 // PIndexState is a state of PIndex.
 type PUIState struct {

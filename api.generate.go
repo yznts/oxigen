@@ -5,22 +5,26 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"path"
 
-	"git.sr.ht/~kyoto-framework/zen"
 	"github.com/disintegration/imaging"
 	"github.com/fogleman/gg"
+	"github.com/kyoto-framework/zen/v2"
+)
+
+// Generation defaults
+var (
+	titleFontDefault   = "OpenSans-SemiBold.ttf"
+	authorFontDefault  = "OpenSans-SemiBold.ttf"
+	websiteFontDefault = "OpenSans-Light.ttf"
+
+	titleFontSizeDefault   = 80.0
+	authorFontSizeDefault  = 50.0
+	websiteFontSizeDefault = 50.0
 )
 
 // Generation constants
 var (
-	fontTitle   = "dist/fonts/OpenSans/OpenSans-SemiBold.ttf"
-	fontAuthor  = "dist/fonts/OpenSans/OpenSans-SemiBold.ttf"
-	fontWebsite = "dist/fonts/OpenSans/OpenSans-Light.ttf"
-
-	fontSizeTitle   = 80.0
-	fontSizeAuthor  = 50.0
-	fontSizeWebsite = 50.0
-
 	marginOverlay  = 20.0
 	marginTitleX   = 60.0
 	marginTitleY   = 90.0
@@ -39,29 +43,41 @@ var (
 
 // GenerateQuery holds generation parameters
 type GenerateQuery struct {
-	// Generation parameters
+	// Image parameters
 	Width  int `query:"width"`
 	Height int `query:"height"`
-	// Data
-	Title   string `query:"title"`
-	Author  string `query:"author"`
-	Website string `query:"website"`
-	Logo    string `query:"logo"`
-	// Settings
+	// Basic settings
+	Title      string `query:"title"`
+	Author     string `query:"author"`
+	Website    string `query:"website"`
+	Logo       string `query:"logo"`
 	Background string `query:"background"`
-	Overlay    bool   `query:"overlay"`
-	Dim        int    `query:"dim"`
+	// Advanced settings
+	TitleFont         string  `query:"title.font"`
+	TitleFontSize     float64 `query:"title.font.size"`
+	AuthorFont        string  `query:"author.font"`
+	AuthorFontSize    float64 `query:"author.font.size"`
+	WebsiteFont       string  `query:"website.font"`
+	WebsiteFontSize   float64 `query:"website.font.size"`
+	BackgroundDim     int     `query:"background.dim"`
+	BackgroundOverlay bool    `query:"background.overlay"`
 }
 
 func AGenerate(w http.ResponseWriter, r *http.Request) {
 	// Unpack query
 	query := GenerateQuery{}
 	zen.Must(0, zen.Query(r.URL.Query()).Unmarshal(&query))
+	// Resolve defaults
+	query.Width = zen.Or(query.Width, 1200)
+	query.Height = zen.Or(query.Height, 628)
+	query.TitleFont = zen.Or(query.TitleFont, titleFontDefault)
+	query.AuthorFont = zen.Or(query.AuthorFont, authorFontDefault)
+	query.WebsiteFont = zen.Or(query.WebsiteFont, websiteFontDefault)
+	query.TitleFontSize = zen.Or(query.TitleFontSize, titleFontSizeDefault)
+	query.AuthorFontSize = zen.Or(query.AuthorFontSize, authorFontSizeDefault)
+	query.WebsiteFontSize = zen.Or(query.WebsiteFontSize, websiteFontSizeDefault)
 	// Initialize image context
-	img := gg.NewContext(
-		zen.Or(query.Width, 1200),
-		zen.Or(query.Height, 628),
-	)
+	img := gg.NewContext(query.Width, query.Height)
 	// Background
 	if query.Background != "" {
 		// Download background from provided url
@@ -83,7 +99,7 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 		img.DrawImage(bg, 0, 0)
 	}
 	// Overlay
-	if query.Overlay {
+	if query.BackgroundOverlay {
 		// Define overlay position and size
 		x := marginOverlay
 		y := marginOverlay
@@ -96,9 +112,9 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 		img.Fill()
 	}
 	// Dim
-	if query.Dim != 0 {
+	if query.BackgroundDim != 0 {
 		// Set dim color, depending on provided value
-		img.SetColor(color.RGBA{0, 0, 0, uint8(query.Dim)})
+		img.SetColor(color.RGBA{0, 0, 0, uint8(query.BackgroundDim)})
 		// Draw dim
 		img.DrawRectangle(0, 0, float64(img.Width()), float64(img.Height()))
 		img.Fill()
@@ -106,7 +122,7 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 	// Title
 	if query.Title != "" {
 		// Load title font
-		if err := img.LoadFontFace(fontTitle, fontSizeTitle); err != nil {
+		if err := img.LoadFontFace(path.Join("dist/fonts", query.TitleFont), query.TitleFontSize); err != nil {
 			panic("error while reading font file")
 		}
 		// Define title position and max width
@@ -121,7 +137,7 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 	// Author
 	if query.Author != "" {
 		// Load author font
-		if err := img.LoadFontFace(fontAuthor, fontSizeAuthor); err != nil {
+		if err := img.LoadFontFace(path.Join("dist/fonts", query.AuthorFont), query.AuthorFontSize); err != nil {
 			panic("error while reading font file")
 		}
 		// Define author position
@@ -135,7 +151,7 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 	// Website
 	if query.Website != "" {
 		// Load website font
-		if err := img.LoadFontFace(fontWebsite, fontSizeWebsite); err != nil {
+		if err := img.LoadFontFace(path.Join("dist/fonts", query.WebsiteFont), query.WebsiteFontSize); err != nil {
 			panic("error while reading font file")
 		}
 		// Define website position

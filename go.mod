@@ -3,11 +3,11 @@ module github.com/yuriizinets/oxigen
 go 1.19
 
 require (
-	git.sr.ht/~kyoto-framework/kyoto v1.1.1
-	git.sr.ht/~kyoto-framework/zen v1.0.5
 	github.com/disintegration/imaging v1.6.2
 	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
+	github.com/kyoto-framework/kyoto/v2 v2.0.1
+	github.com/kyoto-framework/zen/v2 v2.0.0
 )
 
 require (

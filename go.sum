@@ -1,7 +1,3 @@
-git.sr.ht/~kyoto-framework/kyoto v1.1.1 h1:EFFiyA1aJF9KcRdeUydqyvhn1snd1H8aOrD26qcbZWw=
-git.sr.ht/~kyoto-framework/kyoto v1.1.1/go.mod h1:u4gnssIO3cOoQzFDm1clr38ojySaKGT+FFt4CMksbEo=
-git.sr.ht/~kyoto-framework/zen v1.0.5 h1:DMbc7DLMCmv2bu9K6BVkiIz+nTYiNBlqMHN5fNqC2/8=
-git.sr.ht/~kyoto-framework/zen v1.0.5/go.mod h1:0pzRG06CbkgMrrAa3+UnY8/aJCej9IC8j23ly9E25nk=
 github.com/disintegration/imaging v1.6.2 h1:w1LecBlG2Lnp8B3jk5zSuNqd7b4DXhcjwek1ei82L+c=
 github.com/disintegration/imaging v1.6.2/go.mod h1:44/5580QXChDfwIclfc/PCwrr44amcmDAg8hxG0Ewe4=
 github.com/felixge/httpsnoop v1.0.1 h1:lvB5Jl89CsZtGIWuTcDM1E/vkVs49/Ml7JJe07l8SPQ=
@@ -14,6 +10,10 @@ github.com/gorilla/handlers v1.5.1 h1:9lRY6j8DEeeBT10CvO9hGW0gmky0BprnvDI5vfhUHH
 github.com/gorilla/handlers v1.5.1/go.mod h1:t8XrUpc4KVXb7HGyJ4/cEnwQiaxrX/hz1Zv/4g96P1Q=
 github.com/gorilla/mux v1.8.0 h1:i40aqfkR1h2SlN9hojwV5ZA91wcXFOvkdNIeFDP5koI=
 github.com/gorilla/mux v1.8.0/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=
+github.com/kyoto-framework/kyoto/v2 v2.0.1 h1:AUmkGNXEigs1pDn1YxGd5QbKlfggrxMggVKdFsP1NXY=
+github.com/kyoto-framework/kyoto/v2 v2.0.1/go.mod h1:OOmy+HRP1bexSeYszoq/JMzaeEYH3dV7jBemxgs4a3E=
+github.com/kyoto-framework/zen/v2 v2.0.0 h1:Z9n+uKSNOOgUMndrMKZKZnlY4XU+6TMkZNRpgJj289c=
+github.com/kyoto-framework/zen/v2 v2.0.0/go.mod h1:JylDYKVwunXK/cWTNb1Cnp0tvZdmxQTOkDrhYGXG+FE=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20210921155107-089bfa567519/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=

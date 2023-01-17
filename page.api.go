@@ -1,6 +1,6 @@
 package main
 
-import "git.sr.ht/~kyoto-framework/kyoto"
+import "github.com/kyoto-framework/kyoto/v2"
 
 // PAPIState is a state of PAPI.
 type PAPIState struct {
@@ -71,16 +71,52 @@ func PAPI(ctx *kyoto.Context) (state PAPIState) {
 					Help: "url to image background (black background by default)",
 				},
 				{
-					Name:    "overlay",
-					Type:    "bool",
-					Help:    "use dark frame on top of the background",
-					Default: "false",
+					Name:    "title.font",
+					Type:    "string",
+					Default: "OpenSans-SemiBold.ttf",
+					Help:    "title font",
 				},
 				{
-					Name:    "dim",
+					Name:    "title.font.size",
+					Type:    "number",
+					Default: "80",
+					Help:    "title font size",
+				},
+				{
+					Name:    "author.font",
+					Type:    "string",
+					Default: "OpenSans-SemiBold.ttf",
+					Help:    "title font",
+				},
+				{
+					Name:    "author.font.size",
+					Type:    "number",
+					Default: "50",
+					Help:    "author font size",
+				},
+				{
+					Name:    "website.font",
+					Type:    "string",
+					Default: "OpenSans-Light.ttf",
+					Help:    "title font",
+				},
+				{
+					Name:    "website.font.size",
+					Type:    "number",
+					Default: "50",
+					Help:    "author font size",
+				},
+				{
+					Name:    "background.dim",
 					Type:    "int",
 					Help:    "dim background (0-255)",
 					Default: "0",
+				},
+				{
+					Name:    "background.overlay",
+					Type:    "bool",
+					Help:    "use dark frame on top of the background",
+					Default: "false",
 				},
 			},
 		},

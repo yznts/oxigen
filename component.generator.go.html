@@ -12,16 +12,34 @@
         <input type="text" name="logo" value="{{ .Query.Logo }}" placeholder="Logo image ..." class="input input-block">
         <label for="background">Background (url)</label>
         <input type="text" name="background" value="{{ .Query.Background }}" placeholder="Background image ..." class="input input-block">
-        <div class="flex items-center gap-2">
-            <input type="checkbox" name="overlay" value="true" {{ if .Query.Overlay }} checked {{ end }} class="checkbox">
-            <label for="frame">Overlay</label>
-        </div>
-        <div class="flex items-center gap-2">
-            <div class="px-2 pt-2">
-                <input type="range" name="dim" value="{{ .Query.Dim }}" min="0" max="255">
+        <details>
+            <summary class="py-2">Advanced settings</summary>
+            <div class="flex flex-col gap-2">
+                <label for="width">Width</label>
+                <input type="number" step="1" value="{{ or .Query.Width 1200 }}" class="input">
+                <label for="width">Height</label>
+                <input type="number" step="1" value="{{ or .Query.Width 628 }}" class="input">
+                {{ template "settings.font" (compose 
+                    "Name" "title" 
+                    "Font" (or .Query.TitleFont "OpenSans-SemiBold.ttf") 
+                    "Size" (or .Query.TitleFontSize 80)
+                ) }}
+                {{ template "settings.font" (compose 
+                    "Name" "author" 
+                    "Font" (or .Query.AuthorFont "OpenSans-SemiBold.ttf") 
+                    "Size" (or .Query.AuthorFontSize 50)
+                ) }}
+                {{ template "settings.font" (compose 
+                    "Name" "website" 
+                    "Font" (or .Query.WebsiteFont "OpenSans-Light.ttf") 
+                    "Size" (or .Query.WebsiteFontSize 50)
+                ) }}
+                <label for="dim">Background dim</label>
+                <input type="range" name="background.dim" value="{{ .Query.BackgroundDim }}" min="0" max="255">
+                <label for="overlay">Background overlay (dark frame in the center)</label>
+                <input type="checkbox" name="background.overlay" value="true" {{ if .Query.BackgroundOverlay }} checked {{ end }} class="checkbox">
             </div>
-            <label for="frame">Background dim</label>
-        </div>
+        </details>
         <div>
             <button class="btn btn-outline-primary">Apply</button>
         </div>

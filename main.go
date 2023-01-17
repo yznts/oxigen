@@ -8,10 +8,10 @@ import (
 	"net/http"
 	"os"
 
-	"git.sr.ht/~kyoto-framework/kyoto"
-	"git.sr.ht/~kyoto-framework/zen"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/kyoto-framework/kyoto/v2"
+	"github.com/kyoto-framework/zen/v2"
 )
 
 // Embed filesystem
@@ -31,20 +31,37 @@ func setupMiddlewares(mux *mux.Router) {
 
 // setupAssets registers a static files handler.
 func setupAssets(mux *mux.Router) {
-	distroot, _ := fs.Sub(fsdist, "dist")
-	mux.PathPrefix("/assets/").Handler(
-		http.StripPrefix("/assets/", http.FileServer(http.FS(distroot))),
-	)
+	switch os.Getenv("DEV") {
+	case "true":
+		mux.PathPrefix("/assets/").Handler(
+			http.StripPrefix("/assets/", http.FileServer(http.Dir("dist"))),
+		)
+	default:
+		distroot, _ := fs.Sub(fsdist, "dist")
+		mux.PathPrefix("/assets/").Handler(
+			http.StripPrefix("/assets/", http.FileServer(http.FS(distroot))),
+		)
+	}
 }
 
 // setupKyoto provides advanced configuration for kyoto.
 func setupKyoto(mux *mux.Router) {
-	kyoto.TemplateConf = kyoto.TemplateConfiguration{
-		ParseFS:   &fstemplates,
-		ParseGlob: "*.go.html",
-		FuncMap: kyoto.ComposeFuncMap(
-			kyoto.FuncMap, zen.FuncMap,
-		),
+	switch os.Getenv("DEV") {
+	case "true":
+		kyoto.TemplateConf = kyoto.TemplateConfiguration{
+			ParseGlob: "*.go.html",
+			FuncMap: kyoto.ComposeFuncMap(
+				kyoto.FuncMap, zen.FuncMap, FuncMap,
+			),
+		}
+	default:
+		kyoto.TemplateConf = kyoto.TemplateConfiguration{
+			ParseFS:   &fstemplates,
+			ParseGlob: "*.go.html",
+			FuncMap: kyoto.ComposeFuncMap(
+				kyoto.FuncMap, zen.FuncMap, FuncMap,
+			),
+		}
 	}
 }
 
