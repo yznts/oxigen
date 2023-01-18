@@ -4,7 +4,6 @@ import (
 	"image/color"
 	"net/http"
 	"os"
-	"path"
 
 	"github.com/disintegration/imaging"
 	"github.com/fogleman/gg"
@@ -80,7 +79,7 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 	// Background
 	if query.Background != "" {
 		// Load background
-		bg, cleanup, err := extrender.LoadRemoteImage(query.Background)
+		bg, cleanup, err := render.LoadRemoteImage(query.Background)
 		if err != nil {
 			panic(err)
 		}
@@ -114,52 +113,52 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 	}
 	// Title
 	if query.Title != "" {
-		// Load title font
-		if err := img.LoadFontFace(path.Join("dist/fonts", query.TitleFont), query.TitleFontSize); err != nil {
-			panic("error while reading font file")
-		}
 		// Define title position and max width
 		x := marginTitleX
 		y := marginTitleY
 		maxWidth := float64(img.Width()) - marginTitleX - marginTitleX
-		// Define title color
-		img.SetColor(colorTitle)
 		// Draw title
-		img.DrawStringWrapped(query.Title, x, y, 0, 0, maxWidth, 1.5, gg.AlignLeft)
+		render.Text(img, Point{x, y}, Text{
+			Text:  query.Title,
+			Font:  query.TitleFont,
+			Size:  query.TitleFontSize,
+			Color: colorTitle,
+			Width: maxWidth,
+		})
 	}
 	// Author
 	if query.Author != "" {
-		// Load author font
-		if err := img.LoadFontFace(path.Join("dist/fonts", query.AuthorFont), query.AuthorFontSize); err != nil {
-			panic("error while reading font file")
-		}
 		// Define author position
 		x := marginAuthorX
 		y := float64(img.Height()) - marginAuthorY
-		// Define author color
-		img.SetColor(colorAuthor)
 		// Draw author
-		img.DrawString(query.Author, x, y)
+		render.Text(img, Point{x, y}, Text{
+			Text:  query.Author,
+			Font:  query.AuthorFont,
+			Size:  query.AuthorFontSize,
+			Color: colorAuthor,
+			Width: float64(img.Width()),
+		})
 	}
 	// Website
 	if query.Website != "" {
-		// Load website font
-		if err := img.LoadFontFace(path.Join("dist/fonts", query.WebsiteFont), query.WebsiteFontSize); err != nil {
-			panic("error while reading font file")
-		}
 		// Define website position
 		_, textHeight := img.MeasureString(query.Website)
 		x := marginWebsiteX
 		y := float64(img.Height()) - textHeight - marginWebsiteY
-		// Define website color
-		img.SetColor(colorWebsite)
-		// Raw website
-		img.DrawString(query.Website, x, y)
+		// Draw website
+		render.Text(img, Point{x, y}, Text{
+			Text:  query.Website,
+			Font:  query.WebsiteFont,
+			Size:  query.WebsiteFontSize,
+			Color: colorWebsite,
+			Width: float64(img.Width()),
+		})
 	}
 	// Logo
 	if query.Logo != "" {
 		// Load logo
-		logo, cleanup, err := extrender.LoadRemoteImage(query.Logo)
+		logo, cleanup, err := render.LoadRemoteImage(query.Logo)
 		if err != nil {
 			panic(err)
 		}
@@ -174,7 +173,7 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 		img.DrawImage(logo, int(x), int(y))
 	}
 	// Generate unique og file
-	ogfile := zen.Must(os.CreateTemp("/tmp", "*.oxigen.og"))
+	ogfile := zen.Must(os.CreateTemp("/tmp", "*.oxigen.tmp"))
 	// Defer clean up
 	defer os.Remove(ogfile.Name())
 	// Save resulting image to generated file
