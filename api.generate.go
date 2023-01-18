@@ -27,9 +27,9 @@ var (
 	marginTitleX   = 60.0
 	marginTitleY   = 90.0
 	marginWebsiteX = 70.0
-	marginWebsiteY = 30.0
+	marginWebsiteY = 50.0
 	marginAuthorX  = 70.0
-	marginAuthorY  = 130.0
+	marginAuthorY  = 150.0
 	marginLogoX    = 50.0
 	marginLogoY    = 40.0
 
@@ -130,7 +130,7 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 	if query.Author != "" {
 		// Define author position
 		x := marginAuthorX
-		y := float64(img.Height()) - marginAuthorY
+		y := float64(img.Height()) - marginOverlay - marginAuthorY
 		// Draw author
 		render.Text(img, Point{x, y}, Text{
 			Text:  query.Author,
@@ -145,7 +145,7 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 		// Define website position
 		_, textHeight := img.MeasureString(query.Website)
 		x := marginWebsiteX
-		y := float64(img.Height()) - textHeight - marginWebsiteY
+		y := float64(img.Height()) - marginOverlay - textHeight - marginWebsiteY
 		// Draw website
 		render.Text(img, Point{x, y}, Text{
 			Text:  query.Website,
