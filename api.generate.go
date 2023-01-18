@@ -2,7 +2,6 @@ package main
 
 import (
 	"image/color"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path"
@@ -80,19 +79,13 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 	img := gg.NewContext(query.Width, query.Height)
 	// Background
 	if query.Background != "" {
-		// Download background from provided url
-		bgresp := zen.Request("GET", query.Background).Do()
-		bgbytes := zen.Must(ioutil.ReadAll(bgresp.Body))
-		bgresp.Body.Close()
-		// Open temp file
-		bgfile := zen.Must(os.CreateTemp("/tmp", "*.oxigen.bg"))
-		defer os.Remove(bgfile.Name())
-		// Save loaded image to temp file
-		zen.Must(bgfile.Write(bgbytes))
-		// Close file
-		zen.Must(0, bgfile.Close())
-		// Load into object
-		bg := zen.Must(gg.LoadImage(bgfile.Name()))
+		// Load background
+		bg, cleanup, err := extrender.LoadRemoteImage(query.Background)
+		if err != nil {
+			panic(err)
+		}
+		// Defer temp file cleanup
+		defer cleanup()
 		// Resize
 		bg = imaging.Fill(bg, img.Width(), img.Height(), imaging.Center, imaging.Lanczos)
 		// Write to image context
@@ -165,27 +158,20 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 	}
 	// Logo
 	if query.Logo != "" {
-		// Download logo from provided url
-		lgresp := zen.Request("GET", query.Logo).Do()
-		lgbytes := zen.Must(ioutil.ReadAll(lgresp.Body))
-		lgresp.Body.Close()
-		// Open temp file
-		lgfile, _ := os.CreateTemp("/tmp", "*.oxigen.lg")
-		// Defer clean up
-		defer os.Remove(lgfile.Name())
-		// Save loaded image to temp file
-		zen.Must(lgfile.Write(lgbytes))
-		// Close file
-		zen.Must(0, lgfile.Close())
-		// Load into object
-		bg := zen.Must(gg.LoadImage(lgfile.Name()))
+		// Load logo
+		logo, cleanup, err := extrender.LoadRemoteImage(query.Logo)
+		if err != nil {
+			panic(err)
+		}
+		// Defer temp file cleanup
+		defer cleanup()
 		// Resize
-		bg = imaging.Resize(bg, 250, 0, imaging.Lanczos)
+		logo = imaging.Resize(logo, 250, 0, imaging.Lanczos)
 		// Define position
-		x := float64(img.Width()) - float64(bg.Bounds().Dx()) - marginLogoX
-		y := float64(img.Height()) - float64(bg.Bounds().Dy()) - marginLogoY
+		x := float64(img.Width()) - float64(logo.Bounds().Dx()) - marginLogoX
+		y := float64(img.Height()) - float64(logo.Bounds().Dy()) - marginLogoY
 		// Write to image context
-		img.DrawImage(bg, int(x), int(y))
+		img.DrawImage(logo, int(x), int(y))
 	}
 	// Generate unique og file
 	ogfile := zen.Must(os.CreateTemp("/tmp", "*.oxigen.og"))
