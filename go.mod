@@ -6,8 +6,8 @@ require (
 	github.com/disintegration/imaging v1.6.2
 	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
-	github.com/kyoto-framework/kyoto/v2 v2.0.1
-	github.com/kyoto-framework/zen/v2 v2.0.0
+	github.com/kyoto-framework/kyoto/v2 v2.0.2-0.20230222093857-5815d10c56d5
+	github.com/kyoto-framework/zen/v3 v3.0.0-rc2.0.20230222093058-0279ff893400
 )
 
 require (

@@ -8,7 +8,9 @@ import (
 	"path"
 
 	"github.com/fogleman/gg"
-	"github.com/kyoto-framework/zen/v2"
+	"github.com/kyoto-framework/zen/v3/httpx"
+	"github.com/kyoto-framework/zen/v3/logic"
+	"github.com/kyoto-framework/zen/v3/mathx"
 )
 
 // render is an instance of RenderExtension.
@@ -46,7 +48,7 @@ type RenderExtension struct {
 // with cleanup function and error.
 func (r *RenderExtension) LoadRemoteImage(href string) (image.Image, func(), error) {
 	// Fetch image
-	res := zen.Request("GET", href).Do()
+	res := httpx.Request("GET", href).Do()
 	// Decode into bytes
 	resbts, err := io.ReadAll(res.Body)
 	if err != nil {
@@ -84,9 +86,9 @@ func (r *RenderExtension) LoadRemoteImage(href string) (image.Image, func(), err
 // Also, provides reasonable defaults for this particular project.
 func (r *RenderExtension) Text(img *gg.Context, location Point, text Text) {
 	// Defaults
-	text.Font = zen.Or(text.Font, "OpenSans-Regular.ttf")
-	text.Size = zen.Or(text.Size, 50)
-	if zen.Sum(text.Color.RGBA()) == 0 { // If everything is zero, it means no color provided
+	text.Font = logic.Or(text.Font, "OpenSans-Regular.ttf")
+	text.Size = logic.Or(text.Size, 50)
+	if mathx.Sum(text.Color.RGBA()) == 0 { // If everything is zero, it means no color provided
 		text.Color = color.Black
 	}
 	// Load font

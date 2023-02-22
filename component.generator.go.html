@@ -19,17 +19,17 @@
                 <input type="number" name="width" step="1" value="{{ or .Query.Width 1200 }}" class="input">
                 <label for="width">Height</label>
                 <input type="number" name="height" step="1" value="{{ or .Query.Height 628 }}" class="input">
-                {{ template "settings.font" (compose 
+                {{ template "settings.font" (mapx.Compose 
                     "Name" "title" 
                     "Font" (or .Query.TitleFont "OpenSans-SemiBold.ttf") 
                     "Size" (or .Query.TitleFontSize 80)
                 ) }}
-                {{ template "settings.font" (compose 
+                {{ template "settings.font" (mapx.Compose 
                     "Name" "author" 
                     "Font" (or .Query.AuthorFont "OpenSans-SemiBold.ttf") 
                     "Size" (or .Query.AuthorFontSize 50)
                 ) }}
-                {{ template "settings.font" (compose 
+                {{ template "settings.font" (mapx.Compose 
                     "Name" "website" 
                     "Font" (or .Query.WebsiteFont "OpenSans-Light.ttf") 
                     "Size" (or .Query.WebsiteFontSize 50)

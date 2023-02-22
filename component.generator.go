@@ -4,7 +4,8 @@ import (
 	"fmt"
 
 	"github.com/kyoto-framework/kyoto/v2"
-	"github.com/kyoto-framework/zen/v2"
+	"github.com/kyoto-framework/zen/v3/errorsx"
+	"github.com/kyoto-framework/zen/v3/httpx"
 )
 
 type CGeneratorArgs struct{}
@@ -21,7 +22,7 @@ func CGenerator(args *CGeneratorArgs) kyoto.Component[CGeneratorState] {
 		// Write args
 		state.Args = args
 		// Unpack query
-		zen.Must(0, zen.Query(ctx.Request.URL.Query()).Unmarshal(&state.Query))
+		errorsx.Must(0, httpx.Query(ctx.Request.URL.Query()).Unmarshal(&state.Query))
 		// Compose generation url
 		state.Image = fmt.Sprintf(
 			`/api/ogen?%s`,

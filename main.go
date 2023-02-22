@@ -11,7 +11,8 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/kyoto-framework/kyoto/v2"
-	"github.com/kyoto-framework/zen/v2"
+	"github.com/kyoto-framework/zen/v3/errorsx"
+	"github.com/kyoto-framework/zen/v3/templatex"
 )
 
 // Embed filesystem
@@ -51,7 +52,7 @@ func setupKyoto(mux *mux.Router) {
 		kyoto.TemplateConf = kyoto.TemplateConfiguration{
 			ParseGlob: "*.go.html",
 			FuncMap: kyoto.ComposeFuncMap(
-				kyoto.FuncMap, zen.FuncMap, FuncMap,
+				kyoto.FuncMap, templatex.FuncMap, FuncMap,
 			),
 		}
 	default:
@@ -59,7 +60,7 @@ func setupKyoto(mux *mux.Router) {
 			ParseFS:   &fstemplates,
 			ParseGlob: "*.go.html",
 			FuncMap: kyoto.ComposeFuncMap(
-				kyoto.FuncMap, zen.FuncMap, FuncMap,
+				kyoto.FuncMap, templatex.FuncMap, FuncMap,
 			),
 		}
 	}
@@ -108,5 +109,5 @@ func main() {
 
 	// Serve
 	os.Stdout.WriteString(fmt.Sprintf("Serving on :%s\n", *addr))
-	zen.Must(0, http.ListenAndServe(*addr, mux))
+	errorsx.Must(0, http.ListenAndServe(*addr, mux))
 }

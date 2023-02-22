@@ -4,7 +4,7 @@
 {{- end -}}
 
 {{ define "settings.font" }}
-<label for="{{ .Name }}.font">{{ title .Name }} font settings</label>
+<label for="{{ .Name }}.font">{{ strings.Title .Name }} font settings</label>
 <div class="flex gap-2">
     <select name="{{ .Name }}.font" id="{{ .Name }}-font" class="select flex-grow">
         {{ range fonts }}

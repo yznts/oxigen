@@ -7,7 +7,9 @@ import (
 
 	"github.com/disintegration/imaging"
 	"github.com/fogleman/gg"
-	"github.com/kyoto-framework/zen/v2"
+	"github.com/kyoto-framework/zen/v3/errorsx"
+	"github.com/kyoto-framework/zen/v3/httpx"
+	"github.com/kyoto-framework/zen/v3/logic"
 )
 
 // Generation defaults
@@ -64,16 +66,16 @@ type GenerateQuery struct {
 func AGenerate(w http.ResponseWriter, r *http.Request) {
 	// Unpack query
 	query := GenerateQuery{}
-	zen.Must(0, zen.Query(r.URL.Query()).Unmarshal(&query))
+	errorsx.Must(0, httpx.Query(r.URL.Query()).Unmarshal(&query))
 	// Resolve defaults
-	query.Width = zen.Or(query.Width, 1200)
-	query.Height = zen.Or(query.Height, 628)
-	query.TitleFont = zen.Or(query.TitleFont, titleFontDefault)
-	query.AuthorFont = zen.Or(query.AuthorFont, authorFontDefault)
-	query.WebsiteFont = zen.Or(query.WebsiteFont, websiteFontDefault)
-	query.TitleFontSize = zen.Or(query.TitleFontSize, titleFontSizeDefault)
-	query.AuthorFontSize = zen.Or(query.AuthorFontSize, authorFontSizeDefault)
-	query.WebsiteFontSize = zen.Or(query.WebsiteFontSize, websiteFontSizeDefault)
+	query.Width = logic.Or(query.Width, 1200)
+	query.Height = logic.Or(query.Height, 628)
+	query.TitleFont = logic.Or(query.TitleFont, titleFontDefault)
+	query.AuthorFont = logic.Or(query.AuthorFont, authorFontDefault)
+	query.WebsiteFont = logic.Or(query.WebsiteFont, websiteFontDefault)
+	query.TitleFontSize = logic.Or(query.TitleFontSize, titleFontSizeDefault)
+	query.AuthorFontSize = logic.Or(query.AuthorFontSize, authorFontSizeDefault)
+	query.WebsiteFontSize = logic.Or(query.WebsiteFontSize, websiteFontSizeDefault)
 	// Initialize image context
 	img := gg.NewContext(query.Width, query.Height)
 	// Background
@@ -173,13 +175,13 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 		img.DrawImage(logo, int(x), int(y))
 	}
 	// Generate unique og file
-	ogfile := zen.Must(os.CreateTemp("/tmp", "*.oxigen.tmp"))
+	ogfile := errorsx.Must(os.CreateTemp("/tmp", "*.oxigen.tmp"))
 	// Defer clean up
 	defer os.Remove(ogfile.Name())
 	// Save resulting image to generated file
-	zen.Must(0, img.SavePNG(ogfile.Name()))
+	errorsx.Must(0, img.SavePNG(ogfile.Name()))
 	// Close file
-	zen.Must(0, ogfile.Close())
+	errorsx.Must(0, ogfile.Close())
 	// Write response
 	http.ServeFile(w, r, ogfile.Name())
 }
