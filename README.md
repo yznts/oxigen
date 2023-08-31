@@ -30,7 +30,7 @@ Please note, you need Docker installed on your system.
 To use dockerized oxigen, it's enough to create and run a container with an existing image.
 
 ```bash
-docker run ghcr.io/yuriizinets/oxigen:latest -p 80:80
+docker run -p 80:80 ghcr.io/yuriizinets/oxigen:latest
 ```
 
 > !!! It's highly recommended to use explicit version instead of `latest`
