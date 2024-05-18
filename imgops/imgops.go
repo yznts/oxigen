@@ -7,6 +7,8 @@ import (
 	"os"
 	"path"
 
+	_ "golang.org/x/image/webp"
+
 	"github.com/fogleman/gg"
 	"go.kyoto.codes/zen/v3/httpx"
 	"go.kyoto.codes/zen/v3/logic"
