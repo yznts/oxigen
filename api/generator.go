@@ -66,7 +66,7 @@ type GenerateQuery struct {
 	LogoAlignX      int     `query:"logo.align.x"`
 	LogoAlignY      int     `query:"logo.align.y"`
 	BackgroundDim   int     `query:"background.dim"`
-	BackgroundFrame bool    `query:"background.overlay"`
+	BackgroundFrame bool    `query:"background.frame"`
 }
 
 func resolveHref(r *http.Request, href string) string {
@@ -89,7 +89,7 @@ func Generator(w http.ResponseWriter, r *http.Request) {
 	// Unpack query
 	query := GenerateQuery{}
 	errorsx.Must(0, httpx.Query(r.URL.Query()).Unmarshal(&query))
-	query.BackgroundFrame = r.URL.Query().Get("background.overlay") == "on"
+	query.BackgroundFrame = r.URL.Query().Get("background.frame") == "on"
 	// Resolve defaults
 	query.Width = logic.Or(query.Width, 1200)
 	query.Height = logic.Or(query.Height, 628)

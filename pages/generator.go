@@ -26,7 +26,7 @@ func Generator(ctx *component.Context) component.State {
 	state := &GeneratorState{}
 	// Unpack generation query
 	errorsx.Must(0, httpx.Query(ctx.Request.URL.Query()).Unmarshal(&state.Query))
-	state.Query.BackgroundFrame = ctx.Request.URL.Query().Get("background.overlay") == "on"
+	state.Query.BackgroundFrame = ctx.Request.URL.Query().Get("background.frame") == "on"
 	// Compose generation url
 	state.Image = fmt.Sprintf(
 		`/api/ogen?%s`,

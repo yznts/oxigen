@@ -111,7 +111,7 @@ func Api(ctx *component.Context) component.State {
 						Default: "0",
 					},
 					{
-						Name:    "background.overlay",
+						Name:    "background.frame",
 						Type:    "bool",
 						Help:    "use dark frame on top of the background",
 						Default: "false",
