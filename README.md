@@ -15,4 +15,4 @@ docker run -d -p 80:80 ghcr.io/yuriizinets/oxigen:latest
 
 Oxigen is a dynamic social media image generator, which gives you an ability to easily create, customize and use og images with both UI and API.
 
-![Example](assets/example.png)
+![Example](.github/samples/generator.png)
