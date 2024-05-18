@@ -1,15 +1,18 @@
-package main
+package api
 
 import (
 	"image/color"
 	"net/http"
+	"net/url"
 	"os"
+	"strings"
 
 	"github.com/disintegration/imaging"
 	"github.com/fogleman/gg"
-	"github.com/kyoto-framework/zen/v3/errorsx"
-	"github.com/kyoto-framework/zen/v3/httpx"
-	"github.com/kyoto-framework/zen/v3/logic"
+	"github.com/yuriizinets/oxigen/imgops"
+	"go.kyoto.codes/zen/v3/errorsx"
+	"go.kyoto.codes/zen/v3/httpx"
+	"go.kyoto.codes/zen/v3/logic"
 )
 
 // Generation defaults
@@ -53,35 +56,58 @@ type GenerateQuery struct {
 	Logo       string `query:"logo"`
 	Background string `query:"background"`
 	// Advanced settings
-	TitleFont         string  `query:"title.font"`
-	TitleFontSize     float64 `query:"title.font.size"`
-	AuthorFont        string  `query:"author.font"`
-	AuthorFontSize    float64 `query:"author.font.size"`
-	WebsiteFont       string  `query:"website.font"`
-	WebsiteFontSize   float64 `query:"website.font.size"`
-	BackgroundDim     int     `query:"background.dim"`
-	BackgroundOverlay bool    `query:"background.overlay"`
+	TitleFont       string  `query:"title.font"`
+	TitleFontSize   float64 `query:"title.font.size"`
+	AuthorFont      string  `query:"author.font"`
+	AuthorFontSize  float64 `query:"author.font.size"`
+	WebsiteFont     string  `query:"website.font"`
+	WebsiteFontSize float64 `query:"website.font.size"`
+	LogoScale       float64 `query:"logo.scale"`
+	LogoAlignX      int     `query:"logo.align.x"`
+	LogoAlignY      int     `query:"logo.align.y"`
+	BackgroundDim   int     `query:"background.dim"`
+	BackgroundFrame bool    `query:"background.overlay"`
 }
 
-func AGenerate(w http.ResponseWriter, r *http.Request) {
+func resolveHref(r *http.Request, href string) string {
+	// If empty or schema provided, use as-is
+	if href == "" || strings.HasPrefix(href, "http://") || strings.HasPrefix(href, "https://") {
+		return href
+	}
+	// If only path provided, use referrer data to complete href
+	if strings.HasPrefix(href, "/") {
+		ref, _ := url.Parse(r.Referer()) // Parse referrer
+		ref.Path = href                  // Override path
+		return ref.String()
+	}
+	// If we're here, no schema provided (href starts with host).
+	// So, we want to complete schema with request data.
+	return r.Proto + "://" + href
+}
+
+func Generator(w http.ResponseWriter, r *http.Request) {
 	// Unpack query
 	query := GenerateQuery{}
 	errorsx.Must(0, httpx.Query(r.URL.Query()).Unmarshal(&query))
+	query.BackgroundFrame = r.URL.Query().Get("background.overlay") == "on"
 	// Resolve defaults
 	query.Width = logic.Or(query.Width, 1200)
 	query.Height = logic.Or(query.Height, 628)
+	query.Logo = resolveHref(r, query.Logo)
+	query.Background = resolveHref(r, query.Background)
 	query.TitleFont = logic.Or(query.TitleFont, titleFontDefault)
 	query.AuthorFont = logic.Or(query.AuthorFont, authorFontDefault)
 	query.WebsiteFont = logic.Or(query.WebsiteFont, websiteFontDefault)
 	query.TitleFontSize = logic.Or(query.TitleFontSize, titleFontSizeDefault)
 	query.AuthorFontSize = logic.Or(query.AuthorFontSize, authorFontSizeDefault)
 	query.WebsiteFontSize = logic.Or(query.WebsiteFontSize, websiteFontSizeDefault)
+
 	// Initialize image context
 	img := gg.NewContext(query.Width, query.Height)
 	// Background
 	if query.Background != "" {
 		// Load background
-		bg, cleanup, err := render.LoadRemoteImage(query.Background)
+		bg, cleanup, err := imgops.GetRemote(query.Background)
 		if err != nil {
 			panic(err)
 		}
@@ -93,7 +119,7 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 		img.DrawImage(bg, 0, 0)
 	}
 	// Overlay
-	if query.BackgroundOverlay {
+	if query.BackgroundFrame {
 		// Define overlay position and size
 		x := marginOverlay
 		y := marginOverlay
@@ -120,7 +146,7 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 		y := marginTitleY
 		maxWidth := float64(img.Width()) - marginTitleX - marginTitleX
 		// Draw title
-		render.Text(img, Point{x, y}, Text{
+		imgops.RenderText(img, imgops.Point{x, y}, imgops.Text{
 			Text:  query.Title,
 			Font:  query.TitleFont,
 			Size:  query.TitleFontSize,
@@ -134,7 +160,7 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 		x := marginAuthorX
 		y := float64(img.Height()) - marginOverlay - marginAuthorY
 		// Draw author
-		render.Text(img, Point{x, y}, Text{
+		imgops.RenderText(img, imgops.Point{x, y}, imgops.Text{
 			Text:  query.Author,
 			Font:  query.AuthorFont,
 			Size:  query.AuthorFontSize,
@@ -149,7 +175,7 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 		x := marginWebsiteX
 		y := float64(img.Height()) - marginOverlay - textHeight - marginWebsiteY
 		// Draw website
-		render.Text(img, Point{x, y}, Text{
+		imgops.RenderText(img, imgops.Point{x, y}, imgops.Text{
 			Text:  query.Website,
 			Font:  query.WebsiteFont,
 			Size:  query.WebsiteFontSize,
@@ -160,17 +186,22 @@ func AGenerate(w http.ResponseWriter, r *http.Request) {
 	// Logo
 	if query.Logo != "" {
 		// Load logo
-		logo, cleanup, err := render.LoadRemoteImage(query.Logo)
+		logo, cleanup, err := imgops.GetRemote(query.Logo)
 		if err != nil {
 			panic(err)
 		}
 		// Defer temp file cleanup
 		defer cleanup()
 		// Resize
-		logo = imaging.Resize(logo, 250, 0, imaging.Lanczos)
+		if query.LogoScale != 0 {
+			logo = imaging.Resize(logo, int(float64(logo.Bounds().Dx())*query.LogoScale), 0, imaging.Lanczos)
+		}
 		// Define position
 		x := float64(img.Width()) - float64(logo.Bounds().Dx()) - marginLogoX
 		y := float64(img.Height()) - float64(logo.Bounds().Dy()) - marginLogoY
+		// Align
+		x = x + float64(query.LogoAlignX)
+		y = y + float64(query.LogoAlignY)
 		// Write to image context
 		img.DrawImage(logo, int(x), int(y))
 	}

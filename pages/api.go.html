@@ -1,0 +1,41 @@
+{{ define "Api" }}
+<!doctype html>
+<html lang="en">
+<head>
+    {{ template "Common" }}
+    <title>API - Oxigen</title>
+</head>
+<body class="bg-background dots font-geist-sans text-foreground antialiased">
+    {{ template "Navbar" }}
+    <div class="pt-12 container">
+        {{ range .Routes }}
+            <div class="uk-card uk-card-default">
+                <div class="uk-card-header">
+                    <p class="uk-card-title">
+                        <span class="font-bold font-mono">{{ .Method }}</span>
+                        <span class="font-mono">{{ .Path }}</span> -
+                        <span>{{ .Help }}</span>
+                    </p>
+                </div>
+                <div class="uk-card-body">
+                    <span>Query parameters:</span>
+                    <table class="mt-2">
+                        {{ range .Query }}
+                        <tr>
+                            <td class="underline">{{ .Name }}</td>
+                            <td class="pl-2">
+                                <span>- <span class="uk-badge">{{ .Type }}</span> {{ .Help }}</span>
+                                {{ if .Default }}
+                                    <span>(default {{ .Default }})</span>
+                                {{ end }}
+                            </td>
+                        </tr>
+                        {{ end }}
+                    </table>
+                </div>
+            </div>
+        {{ end }}
+    </div>
+</body>
+</html>
+{{ end }}

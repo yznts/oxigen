@@ -1,0 +1,38 @@
+{{ define "Common" }}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="stylesheet" href="/assets/css/tailwind.min.css">
+<link rel="stylesheet" href="/assets/css/custom.min.css">
+<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.19.2/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.19.2/dist/js/uikit-icons.min.js"></script>
+<script defer src="/assets/js/bundle.min.js"></script>
+<script>
+    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark')
+    }
+</script>
+{{ end }}
+
+{{- define "logo" -}}
+<svg class="{{ . }}" height="150" width="150" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" xml:space="preserve"><path d="M68.923 0C41.779 0 19.692 22.087 19.692 49.231c0 27.144 22.086 49.231 49.231 49.231 27.144 0 49.231-22.086 49.231-49.231C118.154 22.087 96.067 0 68.923 0zm0 78.769c-16.288 0-29.538-13.25-29.538-29.538s13.25-29.538 29.538-29.538c16.289 0 29.539 13.25 29.539 29.538s-13.25 29.538-29.539 29.538zM413.538 354.462c-43.433 0-78.769 35.337-78.769 78.769 0 43.433 35.336 78.769 78.769 78.769 43.433 0 78.769-35.336 78.769-78.769.001-43.433-35.336-78.769-78.769-78.769zm0 137.846c-32.577 0-59.077-26.5-59.077-59.077s26.5-59.077 59.077-59.077 59.077 26.5 59.077 59.077-26.499 59.077-59.077 59.077zM285.538 29.538c-92.298 0-167.385 75.087-167.385 167.385s75.087 167.385 167.385 167.385 167.385-75.086 167.385-167.385S377.837 29.538 285.538 29.538zm0 315.077c-81.442 0-147.692-66.25-147.692-147.692 0-81.442 66.25-147.692 147.692-147.692 81.442 0 147.692 66.25 147.692 147.692.001 81.443-66.249 147.692-147.692 147.692z"/><path d="M285.538 88.615c-59.721 0-108.308 48.587-108.308 108.308a9.84 9.84 0 0 0 9.846 9.846 9.84 9.84 0 0 0 9.846-9.846c0-48.865 39.75-88.615 88.615-88.615a9.84 9.84 0 0 0 9.846-9.846 9.838 9.838 0 0 0-9.845-9.847zM237.615 378.125a9.83 9.83 0 0 0-13.365 3.904c-17.308 31.577-50.423 51.202-86.404 51.202-54.289 0-98.462-44.173-98.462-98.462 0-39.327 23.336-74.836 59.461-90.442 4.991-2.154 7.289-7.952 5.135-12.942-2.154-5-7.971-7.279-12.942-5.135-43.346 18.731-71.346 61.327-71.346 108.519 0 65.154 53 118.154 118.154 118.154 43.173 0 82.904-23.538 103.673-61.433 2.616-4.769.865-10.75-3.904-13.365z"/><path d="M137.846 393.846c-32.577 0-59.077-26.5-59.077-59.077a9.84 9.84 0 0 0-9.846-9.846 9.84 9.84 0 0 0-9.846 9.846c0 43.433 35.336 78.769 78.769 78.769a9.84 9.84 0 0 0 9.846-9.846 9.84 9.84 0 0 0-9.846-9.846z"/></svg>
+{{- end -}}
+
+
+<!-- Examples -->
+
+{{- define "example.github" -}}
+/generator?title=Kyoto+Framework&author=%40comrades&website=github.com%2Fkyoto-framework&logo=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F94988179%3Fs%3D200%26v%3D4&background=&width=1200&height=628&title.font=OpenSans-Bold.ttf&title.font.size=80&author.font=OpenSans-Light.ttf&title.font.size=50&website.font=OpenSans-Light.ttf&website.font.size=50&background.dim=110
+{{- end -}}
+
+{{- define "example.article" -}}
+/generator?title=Things+To+Do+Before+Traveling&author=Oleg+Nazarov&website=mybrokerone.com%2Fblog&logo=https%3A%2F%2Fmybrokerone.com%2Fstatic%2Fimg%2Flogo-2.png&logo.scale=0.4&logo.align.x=-40&logo.align.y=-35&background=https%3A%2F%2Fsource.unsplash.com%2Frandom%3Ftravel&width=1200&height=628&title.font=OpenSans-Bold.ttf&title.font.size=80&author.font=OpenSans-Light.ttf&author.font.size=50&website.font=OpenSans-Light.ttf&website.font.size=50&background.dim=110
+{{- end -}}
+
+{{- define "example.frame" -}}
+/generator?title=Kyoto+Framework&author=%40comrades&website=github.com%2Fkyoto-framework&logo=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F94988179%3Fs%3D200%26v%3D4&background=&width=1200&height=628&title.font=OpenSans-Bold.ttf&title.font.size=80&author.font=OpenSans-Light.ttf&title.font.size=50&website.font=OpenSans-Light.ttf&website.font.size=50&background.dim=110
+{{- end -}}

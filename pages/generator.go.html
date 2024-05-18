@@ -1,0 +1,122 @@
+{{ define "Generator" }}
+<!doctype html>
+<html lang="en">
+<head>
+    {{ template "Common" }}
+    <title>Generator - Oxigen</title>
+</head>
+<body class="bg-background dots font-geist-sans text-foreground antialiased">
+    {{ template "Navbar" }}
+    <div class="pt-24 container flex items-start justify-start gap-4">
+        <form method="GET" class="w-1/4 uk-card uk-card-default">
+            <div class="uk-card-body space-y-1">
+                <div class="space-y-1">
+                    <label class="uk-form-label">Title</label>
+                    <input class="uk-input" type="text" name="title" value="{{ .Query.Title }}" placeholder="Title ...">
+                </div>
+                <div class="space-y-1">
+                    <label class="uk-form-label">Author</label>
+                    <input class="uk-input" type="text" name="author" value="{{ .Query.Author }}" placeholder="Author ...">
+                </div>
+                <div class="space-y-1">
+                    <label class="uk-form-label">Website</label>
+                    <input class="uk-input" type="text" name="website" value="{{ .Query.Website }}" placeholder="Website ...">
+                </div>
+                <div class="space-y-1">
+                    <label class="uk-form-label">Logo</label>
+                    <input class="uk-input" type="text" name="logo" value="{{ .Query.Logo }}" placeholder="Logo ...">
+                </div>
+                <details class="pl-4">
+                    <summary class="cursor-pointer text-sm font-light">align</summary>
+                    <div class="space-y-1">
+                        <div class="space-y-1">
+                            <label class="uk-form-label">Scale (0 to 1)</label>
+                            <input class="uk-input" type="number" step="0.01" name="logo.scale" value="{{ or .Query.LogoScale 0 }}">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="uk-form-label">Align X (px, might be negative)</label>
+                            <input class="uk-input" type="number" name="logo.align.x" value="{{ or .Query.LogoAlignX 0 }}">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="form-label">Align Y (px, might be negative)</label>
+                            <input class="uk-input" type="number" name="logo.align.y" value="{{ or .Query.LogoAlignY 0 }}">
+                        </div>
+                    </div>
+                </details>
+                <div class="space-y-1">
+                    <label class="uk-form-label">Background</label>
+                    <input class="uk-input" type="text" name="background" value="{{ .Query.Background }}" required placeholder="Background ...">
+                </div>
+                <details class="pt-4">
+                    <summary class="cursor-pointer text-sm font-light">Advanced</summary>
+                    <div class="pt-2 space-y-1">
+                        <div class="space-y-1">
+                            <label class="uk-form-label">Width (px)</label>
+                            <input class="uk-input" type="number" name="width" value="{{ or .Query.Width 1200 }}" placeholder="Width ...">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="uk-form-label">Height (px)</label>
+                            <input class="uk-input" type="number" name="height" value="{{ or .Query.Height 628 }}" placeholder="Height ...">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="uk-form-label">Title font</label>
+                            <select class="uk-select" name="title.font" value="{{ or .Query.TitleFont `OpenSans-Bold.ttf` }}">
+                                {{ range .Fonts }}
+                                    <option {{ if eq . (or $.Query.TitleFont `OpenSans-Light.ttf`) }} selected {{ end }}>{{ . }}</option>
+                                {{ end }}
+                            </select>
+                            <input class="uk-input" type="number" name="title.font.size" value="{{ or .Query.TitleFontSize 80 }}" placeholder="80 ...">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="uk-form-label">Author font</label>
+                            <select class="uk-select" name="author.font" value="{{ or .Query.AuthorFont `OpenSans-Light.ttf` }}">
+                                {{ range .Fonts }}
+                                    <option {{ if eq . (or $.Query.AuthorFont `OpenSans-Light.ttf`) }} selected {{ end }}>{{ . }}</option>
+                                {{ end }}
+                            </select>
+                            <input class="uk-input" type="number" name="author.font.size" value="{{ or .Query.AuthorFontSize 50 }}" placeholder="50 ...">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="uk-form-label">Website font</label>
+                            <select class="uk-select" name="website.font" value="{{ or .Query.WebsiteFont `OpenSans-Light.ttf` }}">
+                                {{ range .Fonts }}
+                                    <option {{ if eq . (or $.Query.WebsiteFont `OpenSans-Light.ttf`) }} selected {{ end }}>{{ . }}</option>
+                                {{ end }}
+                            </select>
+                            <input class="uk-input" type="number" name="website.font.size" value="{{ or .Query.WebsiteFontSize 50 }}" placeholder="50 ...">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="uk-form-label">Background dim</label>
+                            <input class="uk-range" type="range" name="background.dim"value="{{ or .Query.BackgroundDim 110 }}" min="1" max="255">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="uk-form-label">Background frame</label> <br>
+                            <input class="uk-checkbox" type="checkbox" name="background.overlay" {{ if .Query.BackgroundFrame }} checked="true" {{ end }}>
+                        </div>
+                    </div>
+                </details>
+            </div>
+            <div class="uk-card-footer">
+                <button class="uk-button uk-button-primary">Apply</button>
+            </div>
+        </form>
+        <div class="w-1/4 uk-card uk-card-default">
+            <div class="uk-card-header">
+                <h2 class="uk-card-title">Presets</h2>
+            </div>
+            <div class="uk-card-body space-y-1">
+                <!-- <a href="#" class="btn btn-block btn-solid-primary">Basic</a> -->
+                <a href="{{ template `example.github` }}" class="w-full uk-button uk-button-default">Github</a>
+                <a href="{{ template `example.article` }}" class="w-full uk-button uk-button-default">Article</a>
+                <a href="{{ template `example.frame` }}" class="w-full uk-button uk-button-default">Frame</a>
+            </div>
+        </div>
+        <div class="w-2/4 uk-card uk-card-default">
+            <div class="uk-card-body">
+                <img src="{{ .Image }}" class="rounded-lg" />
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{{ end }}

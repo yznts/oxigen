@@ -1,113 +1,56 @@
 package main
 
 import (
-	"embed"
 	"flag"
 	"fmt"
-	"io/fs"
+	"log"
 	"net/http"
-	"os"
 
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
-	"github.com/kyoto-framework/kyoto/v2"
-	"github.com/kyoto-framework/zen/v3/errorsx"
-	"github.com/kyoto-framework/zen/v3/templatex"
+	"github.com/yuriizinets/oxigen/api"
+	"github.com/yuriizinets/oxigen/pages"
+	"go.kyoto.codes/v3/component"
+	"go.kyoto.codes/v3/htmx"
+	"go.kyoto.codes/v3/rendering"
+	"go.kyoto.codes/zen/v3/errorsx"
+	"go.kyoto.codes/zen/v3/mapx"
+	"go.kyoto.codes/zen/v3/templatex"
 )
 
-// Embed filesystem
-
-//go:embed *.go.html
-var fstemplates embed.FS
-
-//go:embed dist
-var fsdist embed.FS
-
-// setupMiddlewares installs common project middlewares into provided mux.
-func setupMiddlewares(mux *mux.Router) {
-	mux.Use(func(handler http.Handler) http.Handler {
-		return handlers.LoggingHandler(os.Stdout, handler)
-	})
-}
-
-// setupAssets registers a static files handler.
-func setupAssets(mux *mux.Router) {
-	switch os.Getenv("DEV") {
-	case "true":
-		mux.PathPrefix("/assets/").Handler(
-			http.StripPrefix("/assets/", http.FileServer(http.Dir("dist"))),
-		)
-	default:
-		distroot, _ := fs.Sub(fsdist, "dist")
-		mux.PathPrefix("/assets/").Handler(
-			http.StripPrefix("/assets/", http.FileServer(http.FS(distroot))),
-		)
-	}
-}
-
-// setupKyoto provides advanced configuration for kyoto.
-func setupKyoto(mux *mux.Router) {
-	switch os.Getenv("DEV") {
-	case "true":
-		kyoto.TemplateConf = kyoto.TemplateConfiguration{
-			ParseGlob: "*.go.html",
-			FuncMap: kyoto.ComposeFuncMap(
-				kyoto.FuncMap, templatex.FuncMap, FuncMap,
-			),
-		}
-	default:
-		kyoto.TemplateConf = kyoto.TemplateConfiguration{
-			ParseFS:   &fstemplates,
-			ParseGlob: "*.go.html",
-			FuncMap: kyoto.ComposeFuncMap(
-				kyoto.FuncMap, templatex.FuncMap, FuncMap,
-			),
-		}
-	}
-}
-
-// setupPages registers project pages.
-func setupPages(mux *mux.Router) {
-	// We are using custom pages register function here.
-	// Check Page description for details.
-	Page(mux, "/", PIndex)
-	Page(mux, "/ui", PUI)
-	Page(mux, "/api", PAPI)
-}
-
-// setupActions registers actions for dynamic components.
-func setupActions(mux *mux.Router) {
-	// We are using custom actions register function here.
-	// Check Action description for details.
-	// Action(mux, CExample(nil))
-}
-
-// setupAPI registers API handlers.
-func setupAPI(mux *mux.Router) {
-	mux.HandleFunc("/api/ogen", AGenerate)
-}
-
-// main is a project entry point.
 func main() {
 	// Parse arguments
 	addr := flag.String("http", ":8000", "Serving address")
 	flag.Parse()
 
+	// Setup rendering
+	rendering.TEMPLATE_GLOB = "**/*.go.html"
+	rendering.TEMPLATE_FUNCMAP = mapx.Merge(
+		rendering.FuncMap,
+		htmx.FuncMap,
+		component.FuncMap,
+		templatex.FuncMap,
+	)
+
 	// Initialize mux
-	mux := mux.NewRouter()
+	mux := http.NewServeMux()
 
-	// Setup parts into mux
-	setupMiddlewares(mux)
-	setupAssets(mux)
-	setupKyoto(mux)
-	setupPages(mux)
-	setupActions(mux)
-	setupAPI(mux)
+	// Setup assets
+	mux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/dist"))))
 
-	// Handle mux into root
-	http.Handle("/", mux)
+	// Setup serving components (pages/components)
+	serve := map[string]component.Component{
+		"/":          pages.Home,
+		"/api":       pages.Api,
+		"/generator": pages.Generator,
+	}
+	// Register serving components
+	for route, component := range serve {
+		mux.HandleFunc(route, rendering.Handler(component))
+	}
+
+	// Setup API
+	mux.HandleFunc("/api/ogen", api.Generator)
 
 	// Serve
-	os.Stdout.WriteString(fmt.Sprintf("Serving on :%s\n", *addr))
+	log.Printf(fmt.Sprintf("Serving on %s", *addr))
 	errorsx.Must(0, http.ListenAndServe(*addr, mux))
 }

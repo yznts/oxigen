@@ -1,0 +1,29 @@
+{{ define "Home" }}
+<!doctype html>
+<html lang="en">
+<head>
+    {{ template "Common" }}
+    <title>Home - Oxigen</title>
+</head>
+<body class="bg-background dots font-geist-sans text-foreground antialiased">
+    {{ template "Navbar" }}
+    <div class="container pt-48">
+        <div class="uk-card uk-card-default mx-auto max-w-lg">
+            <div class="mt-8">
+                {{ template "logo" "mx-auto w-24 h-24 fill-blue-300" }}
+            </div>
+            <div class="uk-card-body z-50">
+                <h2 class="uk-card-title text-center">Oxigen</h2>
+                <p class="mt-2 text-sm text-center">
+                    Small and minimalistic social media image generator.
+                    You're able to use both generator UI or API.
+                </p>
+                <div class="mt-4 flex justify-center">
+                    <a href="{{ template `example.github` }}" class="uk-button uk-button-primary">Try out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{{ end }}

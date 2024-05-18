@@ -1,4 +1,4 @@
-package main
+package imgops
 
 import (
 	"image"
@@ -8,16 +8,10 @@ import (
 	"path"
 
 	"github.com/fogleman/gg"
-	"github.com/kyoto-framework/zen/v3/httpx"
-	"github.com/kyoto-framework/zen/v3/logic"
-	"github.com/kyoto-framework/zen/v3/mathx"
+	"go.kyoto.codes/zen/v3/httpx"
+	"go.kyoto.codes/zen/v3/logic"
+	"go.kyoto.codes/zen/v3/mathx"
 )
-
-// render is an instance of RenderExtension.
-// See RenderExtension for details.
-var render = &RenderExtension{
-	Fonts: "dist/fonts",
-}
 
 type Text struct {
 	Text  string
@@ -34,19 +28,12 @@ type Point struct {
 	Y float64
 }
 
-// RenderExtension is a set of helpers
-// to reduce complexity of interaction with
-// images, text and gg.Context.
-type RenderExtension struct {
-	Fonts string
-}
-
-// LoadRemoteImage downloads remote image,
+// GetRemote downloads remote image,
 // saves it into temporary file,
 // loads into image object
 // and returns that object
 // with cleanup function and error.
-func (r *RenderExtension) LoadRemoteImage(href string) (image.Image, func(), error) {
+func GetRemote(href string) (image.Image, func(), error) {
 	// Fetch image
 	res := httpx.Request("GET", href).Do()
 	// Decode into bytes
@@ -81,10 +68,10 @@ func (r *RenderExtension) LoadRemoteImage(href string) (image.Image, func(), err
 	return obj, cleanup, nil
 }
 
-// Text is a method to render a given text
+// RenderText is a method to render a given text
 // with parameters on given context and location.
 // Also, provides reasonable defaults for this particular project.
-func (r *RenderExtension) Text(img *gg.Context, location Point, text Text) {
+func RenderText(img *gg.Context, location Point, text Text) {
 	// Defaults
 	text.Font = logic.Or(text.Font, "OpenSans-Regular.ttf")
 	text.Size = logic.Or(text.Size, 50)
@@ -92,7 +79,7 @@ func (r *RenderExtension) Text(img *gg.Context, location Point, text Text) {
 		text.Color = color.Black
 	}
 	// Load font
-	if err := img.LoadFontFace(path.Join(r.Fonts, text.Font), text.Size); err != nil {
+	if err := img.LoadFontFace(path.Join("assets/dist/fonts", text.Font), text.Size); err != nil {
 		panic("error while reading font file")
 	}
 	// Set color

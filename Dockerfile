@@ -21,8 +21,8 @@ FROM alpine
 
 # Copy app
 WORKDIR /app
-COPY --from=build /src/oxigen /app/
-COPY --from=build /src/dist/fonts /app/dist/fonts
+COPY --from=build /src/oxigen /app/oxigen
+COPY --from=build /src/assets/dist /app/assets/dist
 
 # Command
 CMD ["./oxigen", "-http", "0.0.0.0:80"]
