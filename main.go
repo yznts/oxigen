@@ -6,8 +6,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/yuriizinets/oxigen/api"
-	"github.com/yuriizinets/oxigen/pages"
+	"github.com/adhd42/oxigen/api"
+	"github.com/adhd42/oxigen/pages"
 	"go.kyoto.codes/v3/component"
 	"go.kyoto.codes/v3/htmx"
 	"go.kyoto.codes/v3/rendering"

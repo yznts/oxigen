@@ -7,9 +7,9 @@ import (
 	"os"
 	"strings"
 
+	"github.com/adhd42/oxigen/imgops"
 	"github.com/disintegration/imaging"
 	"github.com/fogleman/gg"
-	"github.com/yuriizinets/oxigen/imgops"
 	"go.kyoto.codes/zen/v3/errorsx"
 	"go.kyoto.codes/zen/v3/httpx"
 	"go.kyoto.codes/zen/v3/logic"

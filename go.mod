@@ -1,4 +1,4 @@
-module github.com/yuriizinets/oxigen
+module github.com/adhd42/oxigen
 
 go 1.21
 
