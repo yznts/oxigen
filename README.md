@@ -10,7 +10,7 @@
 </p>
 
 ```go
-docker run -d -p 80:80 ghcr.io/adhd42/oxigen:latest
+docker run -d -p 80:80 ghcr.io/yznts/oxigen:latest
 ```
 
 Oxigen is a dynamic social media image generator, which gives you an ability to easily create, customize and use og images with both UI and API.

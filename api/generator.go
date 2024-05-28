@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/adhd42/oxigen/imgops"
+	"github.com/yznts/oxigen/imgops"
 	"github.com/disintegration/imaging"
 	"github.com/fogleman/gg"
 	"go.kyoto.codes/zen/v3/errorsx"

@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/adhd42/oxigen/api"
+	"github.com/yznts/oxigen/api"
 	"go.kyoto.codes/v3/component"
 	"go.kyoto.codes/zen/v3/errorsx"
 	"go.kyoto.codes/zen/v3/httpx"
